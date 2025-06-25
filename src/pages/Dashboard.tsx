@@ -16,13 +16,42 @@ import {
   CardHeader,
   SimpleGrid,
   Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalCloseButton,
+  FormControl,
+  FormLabel,
+  Input,
+  NumberInput,
+  NumberInputField,
 } from '@chakra-ui/react'
 import { FaRobot, FaChartLine, FaUsers, FaGraduationCap } from 'react-icons/fa'
 import { useStore } from '../store/useStore'
 import AIMentor from '../components/AIMentor'
+import { useDisclosure } from '@chakra-ui/react'
 
 const Dashboard = () => {
   const user = useStore((state) => state.user)
+  const setUser = useStore((state) => state.setUser)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [editName, setEditName] = React.useState(user?.name || '')
+  const [editAge, setEditAge] = React.useState(user?.age || 13)
+
+  React.useEffect(() => {
+    setEditName(user?.name || '')
+    setEditAge(user?.age || 13)
+  }, [user])
+
+  const handleSave = () => {
+    if (user) {
+      setUser({ ...user, name: editName, age: editAge })
+    }
+    onClose()
+  }
 
   const recommendations = [
     {
@@ -79,7 +108,7 @@ const Dashboard = () => {
                     </SimpleGrid>
                   </Box>
 
-                  <Button width="100%" colorScheme="brand" variant="outline">
+                  <Button width="100%" colorScheme="brand" variant="outline" onClick={onOpen}>
                     Edit Profile
                   </Button>
                 </VStack>
@@ -135,6 +164,32 @@ const Dashboard = () => {
           </VStack>
         </GridItem>
       </Grid>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Profile</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl mb={4}>
+              <FormLabel>Name</FormLabel>
+              <Input value={editName} onChange={(e) => setEditName(e.target.value)} />
+            </FormControl>
+            <FormControl mb={4}>
+              <FormLabel>Age</FormLabel>
+              <NumberInput min={10} max={100} value={editAge} onChange={(_, v) => setEditAge(v)}>
+                <NumberInputField />
+              </NumberInput>
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="brand" mr={3} onClick={handleSave}>
+              Save
+            </Button>
+            <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Container>
   )
 }
