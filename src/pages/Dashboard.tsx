@@ -31,7 +31,7 @@ import {
 } from '@chakra-ui/react'
 import { FaRobot, FaChartLine, FaUsers, FaGraduationCap } from 'react-icons/fa'
 import { useStore } from '../store/useStore'
-import AIMentor from '../components/AIMentor'
+import Pathy from '../components/pathy'
 import { useDisclosure } from '@chakra-ui/react'
 
 const Dashboard = () => {
@@ -115,7 +115,7 @@ const Dashboard = () => {
               </CardBody>
             </Card>
 
-            <AIMentor />
+            <Pathy />
           </VStack>
         </GridItem>
 
